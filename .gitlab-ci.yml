@@ -53,16 +53,15 @@ server-build:
     - docker push chemsorly/conductor:%PROJECT_VERSION%-server-%CI_BUILD_REF_NAME%
     - docker push chemsorly/conductor:latest-server-%CI_BUILD_REF_NAME%
 
-server-deploy:
-    stage: deploy
-    only:
-    - master
-    - nightly
-    tags:
-    - shell
-    - windows
-    script:
-    - docker login -u gitlab-ci-token -p %CI_JOB_TOKEN% git.uni-due.de:6666
-    - docker-compose -f .\\Conductor_Server\docker-compose.%CI_BUILD_REF_NAME%.yml -p rnn_%CI_BUILD_REF_NAME% build --pull 
-    - docker-compose -f .\\Conductor_Server\docker-compose.%CI_BUILD_REF_NAME%.yml -p rnn_%CI_BUILD_REF_NAME% down
-    - docker-compose -f .\\Conductor_Server\docker-compose.%CI_BUILD_REF_NAME%.yml -p rnn_%CI_BUILD_REF_NAME% up -d --force-recreate
+#server-deploy:
+#    stage: deploy
+#    only:
+#    - master
+#    - nightly
+#    tags:
+#    - shell
+#    - windows
+#    script:
+#    - docker-compose -f .\\Conductor_Server\docker-compose.%CI_BUILD_REF_NAME%.yml -p rnn_%CI_BUILD_REF_NAME% build --pull 
+#    - docker-compose -f .\\Conductor_Server\docker-compose.%CI_BUILD_REF_NAME%.yml -p rnn_%CI_BUILD_REF_NAME% down
+#    - docker-compose -f .\\Conductor_Server\docker-compose.%CI_BUILD_REF_NAME%.yml -p rnn_%CI_BUILD_REF_NAME% up -d --force-recreate
