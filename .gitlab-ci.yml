@@ -21,6 +21,10 @@ before_script:
 client-build-ubuntu-cpu:
     stage: build
     image: docker:stable
+    tags:
+    - docker
+    - shell
+    - ubuntu
     services: 
     - docker:dind
     script: 
@@ -33,6 +37,10 @@ client-build-ubuntu-cpu:
 client-build-ubuntu-gpu:
     stage: build
     image: docker:stable
+    tags:
+    - docker
+    - shell
+    - ubuntu
     services: 
     - docker:dind
     script: 
@@ -45,6 +53,7 @@ client-build-ubuntu-gpu:
 server-build:
     stage: build
     tags:
+    - docker
     - shell
     - windows
     script:
