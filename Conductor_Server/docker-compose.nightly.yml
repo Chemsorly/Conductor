@@ -1,0 +1,16 @@
+version: '3'
+services:
+  app:
+    image: chemsorly/conductor:latest-server-nightly
+    restart: always
+    stdin_open: true #workaround to keep app alive
+    volumes:
+        - C:/DockerHost/Conductor/nightly:C:/app/workdir #in case you want to directly access the files
+    environment: 
+        - CONDUCTOR_HOST=https://nightly.example.org
+    ports:
+        - 8090:8080
+networks:
+  default:
+    external:
+      name: nat 

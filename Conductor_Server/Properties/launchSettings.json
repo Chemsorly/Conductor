@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Conductor_Server": {
+      "commandName": "Project"
+    }
+  }
+}

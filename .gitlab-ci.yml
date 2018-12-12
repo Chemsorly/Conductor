@@ -1,0 +1,68 @@
+stages:
+    - build
+    #- deploy
+
+before_script:
+    - echo $CI_BUILD_ID %CI_BUILD_ID%
+    - echo $CI_BUILD_REF %CI_BUILD_REF%
+    - echo $CI_BUILD_REF_NAME %CI_BUILD_REF_NAME%
+    - echo $CI_BUILD_REPO %CI_BUILD_REPO%
+    - echo $CI_BUILD_TAG %CI_BUILD_TAG%
+    - echo $CI_BUILD_NAME %CI_BUILD_NAME%
+    - echo $CI_BUILD_STAGE %CI_BUILD_STAGE%
+    - echo $CI_BUILD_TRIGGERED %CI_BUILD_TRIGGERED%
+    - echo $CI_PROJECT_DIR %CI_PROJECT_DIR%
+    - echo $CI_PROJECT_ID %CI_PROJECT_ID%
+    - echo $CI_SERVER %CI_SERVER%
+    - echo $CI_SERVER_NAME %CI_SERVER_NAME%
+    - echo $CI_SERVER_REVISION %CI_SERVER_REVISION%
+    - echo $CI_SERVER_VERSION %CI_SERVER_VERSION%
+
+client-build-ubuntu-cpu:
+    stage: build
+    image: docker:stable
+    services: 
+    - docker:dind
+    script: 
+    - docker info
+    - docker build --build-arg CONDUCTOR_VERSION=$PROJECT_VERSION.$CI_BUILD_ID --pull -t chemsorly/conductor:latest-client-cpu-$CI_BUILD_REF_NAME -t chemsorly/conductor:$PROJECT_VERSION-client-cpu-$CI_BUILD_REF_NAME -f Conductor_Client/linux-cpu.dockerfile . 
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN git.chemsorly.com
+    - docker push chemsorly/conductor:$PROJECT_VERSION-client-cpu-$CI_BUILD_REF_NAME
+    - docker push chemsorly/conductor:latest-client-cpu-$CI_BUILD_REF_NAME
+
+client-build-ubuntu-gpu:
+    stage: build
+    image: docker:stable
+    services: 
+    - docker:dind
+    script: 
+    - docker info
+    - docker build --build-arg CONDUCTOR_VERSION=$PROJECT_VERSION.$CI_BUILD_ID --pull -t chemsorly/conductor:latest-client-gpu-$CI_BUILD_REF_NAME -t chemsorly/conductor:$PROJECT_VERSION-client-gpu-$CI_BUILD_REF_NAME -f Conductor_Client/linux-gpu.dockerfile . 
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN git.chemsorly.com
+    - docker push chemsorly/conductor:$PROJECT_VERSION-client-gpu-$CI_BUILD_REF_NAME
+    - docker push chemsorly/conductor:latest-client-gpu-$CI_BUILD_REF_NAME
+
+server-build:
+    stage: build
+    tags:
+    - shell
+    - windows
+    script:
+    - docker build --build-arg DEPLOY_BRANCH=%CI_BUILD_REF_NAME% --build-arg DEPLOY_VERSION=%PROJECT_VERSION%.%CI_BUILD_ID% --pull -t chemsorly/conductor:latest-server-%CI_BUILD_REF_NAME% -t  chemsorly/conductor:%PROJECT_VERSION%-server-%CI_BUILD_REF_NAME% -f Conductor_Server/build.dockerfile .
+    - docker login -u gitlab-ci-token -p %CI_JOB_TOKEN% git.chemsorly.com
+    - docker push chemsorly/conductor:%PROJECT_VERSION%-server-%CI_BUILD_REF_NAME%
+    - docker push chemsorly/conductor:latest-server-%CI_BUILD_REF_NAME%
+
+server-deploy:
+    stage: deploy
+    only:
+    - master
+    - nightly
+    tags:
+    - shell
+    - windows
+    script:
+    - docker login -u gitlab-ci-token -p %CI_JOB_TOKEN% git.uni-due.de:6666
+    - docker-compose -f .\\Conductor_Server\docker-compose.%CI_BUILD_REF_NAME%.yml -p rnn_%CI_BUILD_REF_NAME% build --pull 
+    - docker-compose -f .\\Conductor_Server\docker-compose.%CI_BUILD_REF_NAME%.yml -p rnn_%CI_BUILD_REF_NAME% down
+    - docker-compose -f .\\Conductor_Server\docker-compose.%CI_BUILD_REF_NAME%.yml -p rnn_%CI_BUILD_REF_NAME% up -d --force-recreate

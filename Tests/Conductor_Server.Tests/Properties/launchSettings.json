@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Conductor_Server.Tests": {
+      "commandName": "Project",
+      "commandLineArgs": "http://localhost:53161"
+    }
+  }
+}
