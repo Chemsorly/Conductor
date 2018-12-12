@@ -26,7 +26,7 @@ client-build-ubuntu-cpu:
     script: 
     - docker info
     - docker build --build-arg CONDUCTOR_VERSION=$PROJECT_VERSION.$CI_BUILD_ID --pull -t chemsorly/conductor:latest-client-cpu-$CI_BUILD_REF_NAME -t chemsorly/conductor:$PROJECT_VERSION-client-cpu-$CI_BUILD_REF_NAME -f Conductor_Client/linux-cpu.dockerfile . 
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN git.chemsorly.com
+    - docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
     - docker push chemsorly/conductor:$PROJECT_VERSION-client-cpu-$CI_BUILD_REF_NAME
     - docker push chemsorly/conductor:latest-client-cpu-$CI_BUILD_REF_NAME
 
@@ -38,7 +38,7 @@ client-build-ubuntu-gpu:
     script: 
     - docker info
     - docker build --build-arg CONDUCTOR_VERSION=$PROJECT_VERSION.$CI_BUILD_ID --pull -t chemsorly/conductor:latest-client-gpu-$CI_BUILD_REF_NAME -t chemsorly/conductor:$PROJECT_VERSION-client-gpu-$CI_BUILD_REF_NAME -f Conductor_Client/linux-gpu.dockerfile . 
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN git.chemsorly.com
+    - docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
     - docker push chemsorly/conductor:$PROJECT_VERSION-client-gpu-$CI_BUILD_REF_NAME
     - docker push chemsorly/conductor:latest-client-gpu-$CI_BUILD_REF_NAME
 
@@ -49,7 +49,7 @@ server-build:
     - windows
     script:
     - docker build --build-arg DEPLOY_BRANCH=%CI_BUILD_REF_NAME% --build-arg DEPLOY_VERSION=%PROJECT_VERSION%.%CI_BUILD_ID% --pull -t chemsorly/conductor:latest-server-%CI_BUILD_REF_NAME% -t  chemsorly/conductor:%PROJECT_VERSION%-server-%CI_BUILD_REF_NAME% -f Conductor_Server/build.dockerfile .
-    - docker login -u gitlab-ci-token -p %CI_JOB_TOKEN% git.chemsorly.com
+    - docker login -u %DOCKER_LOGIN% -p %DOCKER_PASSWORD%
     - docker push chemsorly/conductor:%PROJECT_VERSION%-server-%CI_BUILD_REF_NAME%
     - docker push chemsorly/conductor:latest-server-%CI_BUILD_REF_NAME%
 
