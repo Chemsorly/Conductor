@@ -7,7 +7,7 @@ services:
     volumes:
         - C:/DockerHost/Conductor/master:C:/app/workdir #in case you want to directly access the files
     environment: 
-        - CONDUCTOR_HOST=https://example.org
+        - CONDUCTOR_HOST=""
     ports:
         - 8080:8080
 networks:

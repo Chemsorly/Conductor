@@ -17,7 +17,7 @@ namespace Conductor_Server.Commands
         public event OnTimeoutHappened OnTimeoutHappenedEvent;
 
         public WorkPackage WorkPackage { get; private set; }
-        public WorkType WorkType {get;}
+        public WorkPackageType WorkType {get;}
         public Guid WorkItemID { get; }
         public String Parameters { get; }
         public String ClientID { get; private set; }
@@ -26,10 +26,10 @@ namespace Conductor_Server.Commands
         public Version Version { get; set; }
 
         private System.Timers.Timer _timeoutTimer;
-        private int TimeoutValue => WorkType == WorkType.Training ? 302400000 : 1200000; 
+        private int TimeoutValue => WorkType == WorkPackageType.Training ? 302400000 : 1200000; 
         //604.800.000 = 7d, 86.400.000s = 24h; 43.200.000s = 12h; 1.200.000s = 20m
 
-        public WorkItem(Version pVersion, List<File> pFiles, WorkType pWorkType, Guid pGuid)
+        public WorkItem(Version pVersion, List<File> pFiles, WorkPackageType pWorkType, Guid pGuid)
         {
             //specify default values
             this.Version = pVersion;

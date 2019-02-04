@@ -6,7 +6,6 @@ namespace Conductor_Shared
 {
     public class PredictionResultPackage : ResultPackage
     {
-        public RNN_SinglePrediction Prediction { get; set; }
-
+        public SinglePrediction Prediction { get; set; }
     }
 }

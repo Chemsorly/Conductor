@@ -15,6 +15,7 @@ using Conductor_Shared;
 using System.IO;
 using Microsoft.AspNetCore.SignalR.Client;
 using MoreLinq;
+using Conductor_Shared.Enums;
 
 namespace Conductor_Client.Client
 {
@@ -114,11 +115,11 @@ namespace Conductor_Client.Client
                 //assign work based on received package type; throw error if undefined
                 switch(work.WorkType)
                 {
-                    case WorkType.Training:
+                    case WorkPackageType.Training:
                         NotifyLogMessageEvent($"[Log] Processing training work package");
                         result = Training.RunTraining(WorkingDirectory, work, ref _clientStatus, SendStatusUpdate, NotifyLogMessageEvent, _machineData);
                         break;
-                    case WorkType.Prediction:
+                    case WorkPackageType.Prediction:
                         NotifyLogMessageEvent($"[Log] Processing prediction work package");
                         result = Prediction.RunPrediction(WorkingDirectory, work, ref _clientStatus, SendStatusUpdate, NotifyLogMessageEvent, _machineData);
                         break;
@@ -226,9 +227,9 @@ namespace Conductor_Client.Client
 
                 if (result != null)
                 {
-                    if(result.WorkType == WorkType.Training)
+                    if(result.WorkType == WorkPackageType.Training)
                         NotifyLogMessageEvent($"[Log] Training Work package received from server: {result.Version.ToString()} {result.GUID}");
-                    else if (result.WorkType == WorkType.Prediction)
+                    else if (result.WorkType == WorkPackageType.Prediction)
                         NotifyLogMessageEvent($"[Log] Prediction Work package received from server:{result.Version.ToString()} {result.GUID}");
                     else
                         NotifyLogMessageEvent($"[Log] Unknown Work package received from server: {result.Version.ToString()} {result.GUID}");

@@ -116,7 +116,7 @@ namespace Conductor_Server
                 CoreNotifyLogMessage("Trying to send new status, but target host is not connected");
         }
 
-        private void _commandManager_PredictionFinishedEvent(RNN_EnsemblePrediction pEnsembleprediction)
+        private void _commandManager_PredictionFinishedEvent(EnsemblePrediction pEnsembleprediction)
         {
             if (_signalrclientmanager.IsConnected)
                 _signalrclientmanager.SendResults(pEnsembleprediction);
