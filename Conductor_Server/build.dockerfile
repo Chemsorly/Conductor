@@ -1,12 +1,11 @@
 FROM microsoft/dotnet:2.1-sdk as builder
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 WORKDIR /source
 COPY . .
 RUN dotnet restore
 RUN dotnet publish ./Conductor_Server/Conductor_Server.csproj --output /app/ --configuration Release
 
-FROM microsoft/windowsservercore
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
 MAINTAINER Adrian.Neubauer@paluno.uni-due.de
 ENV RUNTIMEENV="docker"
 

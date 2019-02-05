@@ -82,7 +82,7 @@ namespace Conductor_Server.Commands
             return new DirectoryInfo(path);
         }
 
-        public List<String> GetModelResults(Version pVersion, PredictionModel pModel)
+        public List<String> GetModelResults(Version pVersion, VersionStatusModel pModel)
         {
             if(!String.IsNullOrWhiteSpace(pModel.ModelFileName))
             {
@@ -213,6 +213,6 @@ namespace Conductor_Server.Commands
         public String OS { get; set; }
         public String ProcessingUnit { get; set; }
         public DateTime Timestamp { get; set; }
-        public PredictionModel PredictionModel { get; set; }
+        public VersionStatusModel PredictionModel { get; set; }
     }
 }

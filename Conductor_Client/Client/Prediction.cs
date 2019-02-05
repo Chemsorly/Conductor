@@ -37,7 +37,7 @@ namespace Conductor_Client.Client
             //run process
             pNotifyLogMessageEvent("[Log] Create worker process.");
             DateTime startTime = DateTime.UtcNow;
-            RNN_SinglePrediction predictionResult = null;
+            SinglePrediction predictionResult = null;
             foreach (var command in pWorkPackage.Version.PredictionCommands)
             {
                 pNotifyLogMessageEvent($"[Log] Create process for: {command.FileName} {command.Arguments} in {pWorkingDirectory.FullName}");
@@ -70,13 +70,13 @@ namespace Conductor_Client.Client
                         process.OutputDataReceived += (sender, args) =>
                         {
                             //intercept out stream for prediction in log
-                            if (args.Data != null && Regex.IsMatch(args.Data, @"PredictedBuffer=-?\d+.\d+"))
+                            if (args.Data != null && Regex.IsMatch(args.Data, @"PredictedValue=-?\d+.\d+"))
                             {
-                                var match = Regex.Match(args.Data, @"PredictedBuffer=-?\d+.\d+");
+                                var match = Regex.Match(args.Data, @"PredictedValue=-?\d+.\d+");
                                 var split = match.Value.Split('=');
-                                predictionResult = new RNN_SinglePrediction()
+                                predictionResult = new SinglePrediction()
                                 {
-                                    PredictedBuffer = Double.Parse(split[1])
+                                    PredictedValue = Double.Parse(split[1])
                                 };
                             }
                             pNotifyLogMessageEvent(args.Data);

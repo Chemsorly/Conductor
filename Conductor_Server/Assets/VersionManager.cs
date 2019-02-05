@@ -166,7 +166,7 @@ namespace Conductor_Server.Assets
             StatusChangedEvent?.Invoke(configurationManager.CurrentConfiguration);
         }
 
-        Status UpdateStatus(Version pVersion, Status pOldStatus = null)
+        VersionStatus UpdateStatus(Version pVersion, VersionStatus pOldStatus = null)
         {
             //get version models folder
             var dir = fsManager.GetVersionModelsDirectory(pVersion);
@@ -213,7 +213,7 @@ namespace Conductor_Server.Assets
             }
        
             //create status object
-            Status status = new Status();
+            VersionStatus status = new VersionStatus();
             Parallel.ForEach(metaMapping, model =>
             {
                 //get metadata
@@ -229,7 +229,7 @@ namespace Conductor_Server.Assets
                 var modelFileName = model.Key.Directory.Name;
                 var oldStatusModel = pOldStatus != null ? pOldStatus.CurrentModels.FirstOrDefault(t => t.ModelFileName == modelFileName) : null;
 
-                var predictionModel = new PredictionModel()
+                var predictionModel = new VersionStatusModel()
                 {
                     CreatedAt = metaData.Timestamp,
                     TrainingTime = metaData.Duration,
