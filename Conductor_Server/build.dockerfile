@@ -5,7 +5,7 @@ COPY . .
 RUN dotnet restore
 RUN dotnet publish ./Conductor_Server/Conductor_Server.csproj --output /app/ --configuration Release
 
-FROM microsoft/windowsservercore
+FROM microsoft/windowsservercore:ltsc2016
 MAINTAINER Adrian.Neubauer@paluno.uni-due.de
 ENV RUNTIMEENV="docker"
 
