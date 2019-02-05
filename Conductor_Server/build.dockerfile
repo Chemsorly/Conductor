@@ -1,5 +1,4 @@
 FROM microsoft/dotnet:2.1-sdk as builder
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 WORKDIR /source
 COPY . .
