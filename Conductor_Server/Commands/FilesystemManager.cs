@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -107,8 +107,9 @@ namespace Conductor_Server.Commands
             CreateIfNotExists(modelsdir);
             foreach (var file in pResults.ResultFiles)
             {
-                var filepath = System.IO.Path.Combine(modelsdir, file.Filename);
-                System.IO.File.WriteAllBytes(filepath, file.FileData);
+                var filepath = new FileInfo(System.IO.Path.Combine(modelsdir,file.DirectoryStructure,file.Filename));
+                CreateIfNotExists(filepath.Directory.FullName);
+                System.IO.File.WriteAllBytes(filepath.FullName, file.FileData);
             }
 
             //write meta file
