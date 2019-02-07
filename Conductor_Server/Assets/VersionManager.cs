@@ -1,4 +1,4 @@
-﻿using MoreLinq;
+using MoreLinq;
 using Conductor_Server.Commands;
 using Conductor_Server.Configuration;
 using Conductor_Server.Utility;
@@ -175,10 +175,10 @@ namespace Conductor_Server.Assets
             List<FileInfo> modelFiles = new List<FileInfo>(), logFiles = new List<FileInfo>(), resultFiles = new List<FileInfo>();
             Dictionary<FileInfo, FileInfo> metaMapping = new Dictionary<FileInfo, FileInfo>();
 
-            foreach (var modelDir in dir.GetDirectories().Where(t => t.GetFiles().Any(u => u.Extension == ".h5")))
+            foreach (var modelDir in dir.GetDirectories())
             {
                 //get all dirs where there's at least one h5 model file
-                var files = modelDir.GetFiles();
+                var files = modelDir.GetFiles("*", SearchOption.AllDirectories);
                 var modelFile = files.FirstOrDefault(t => t.Name.Contains(".h5"));
                 var metaFile = files.FirstOrDefault(t => t.Name == "meta.xml");
                 var logFile = files.FirstOrDefault(t => t.Name == "console.log");
