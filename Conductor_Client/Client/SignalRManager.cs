@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +16,7 @@ using System.IO;
 using Microsoft.AspNetCore.SignalR.Client;
 using MoreLinq;
 using Conductor_Shared.Enums;
+using Conductor_Server.Utility;
 
 namespace Conductor_Client.Client
 {
@@ -134,14 +135,15 @@ namespace Conductor_Client.Client
 
                     //gather out files
                     result.ResultFiles = new List<Conductor_Shared.File>();
-                    var resultfiles = WorkingDirectory.EnumerateFiles().Where(t => work.InFiles.All(u => u.Filename != t.Name));                    
+                    var resultfiles = WorkingDirectory.EnumerateFiles("*", SearchOption.AllDirectories).Where(t => work.InFiles.All(u => u.Filename != t.Name));                 
                     resultfiles.ForEach(file =>
                     {
                         NotifyLogMessageEvent($"[Log] Serializing {file.FullName}");
                         result.ResultFiles.Add(new Conductor_Shared.File()
                         {
                             Filename = file.Name,
-                            FileData = System.IO.File.ReadAllBytes(file.FullName)
+                            FileData = System.IO.File.ReadAllBytes(file.FullName),
+                            DirectoryStructure = Filesystem.MakeRelativePath(WorkingDirectory.FullName, file.Directory.FullName)
                         });
                     });
 
