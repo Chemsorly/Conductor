@@ -78,6 +78,26 @@ Compile and run the Conductor_Client.dll with the dotnet command and the server 
 ```
 dotnet Conductor_Server.dll SERVER_HOSTNAME:PORT
 ```
+### Example configuration (version.xml)
+```
+<?xml version="1.0"?>
+<Version xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Created>2018-12-06T14:22:16.782621+01:00</Created>
+  <LastUpdated>2018-12-06T14:22:16.7826263+01:00</LastUpdated>
+  <Name>folder name</Name>
+  <DatasetType>Cargo2000</DatasetType>
+  <VersionStatus />
+  <TrainingCommands>
+    <VersionCommand>
+      <FileName>/bin/bash</FileName>
+      <Arguments>-c "python3 c2k_train_and_predict.py param1 param2 paramn"</Arguments>
+    </VersionCommand>
+  </TrainingCommands>
+  <PredictionCommands />
+  <TargetModels>100</TargetModels>
+</Version>
+```
+
 
 # Credits
 This application was initially developed during my master thesis and extended during the TransformingTransports research project, which received funding from the EU’s Horizon 2020 R&I programme under grant 731932.
