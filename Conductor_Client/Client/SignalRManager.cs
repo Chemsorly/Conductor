@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +15,8 @@ using Conductor_Shared;
 using System.IO;
 using Microsoft.AspNetCore.SignalR.Client;
 using MoreLinq;
+using Conductor_Shared.Enums;
+using Conductor_Server.Utility;
 
 namespace Conductor_Client.Client
 {
@@ -114,11 +116,11 @@ namespace Conductor_Client.Client
                 //assign work based on received package type; throw error if undefined
                 switch(work.WorkType)
                 {
-                    case WorkType.Training:
+                    case WorkPackageType.Training:
                         NotifyLogMessageEvent($"[Log] Processing training work package");
                         result = Training.RunTraining(WorkingDirectory, work, ref _clientStatus, SendStatusUpdate, NotifyLogMessageEvent, _machineData);
                         break;
-                    case WorkType.Prediction:
+                    case WorkPackageType.Prediction:
                         NotifyLogMessageEvent($"[Log] Processing prediction work package");
                         result = Prediction.RunPrediction(WorkingDirectory, work, ref _clientStatus, SendStatusUpdate, NotifyLogMessageEvent, _machineData);
                         break;
@@ -133,14 +135,15 @@ namespace Conductor_Client.Client
 
                     //gather out files
                     result.ResultFiles = new List<Conductor_Shared.File>();
-                    var resultfiles = WorkingDirectory.EnumerateFiles().Where(t => work.InFiles.All(u => u.Filename != t.Name));                    
+                    var resultfiles = WorkingDirectory.EnumerateFiles("*", SearchOption.AllDirectories).Where(t => work.InFiles.All(u => u.Filename != t.Name));                 
                     resultfiles.ForEach(file =>
                     {
                         NotifyLogMessageEvent($"[Log] Serializing {file.FullName}");
                         result.ResultFiles.Add(new Conductor_Shared.File()
                         {
                             Filename = file.Name,
-                            FileData = System.IO.File.ReadAllBytes(file.FullName)
+                            FileData = System.IO.File.ReadAllBytes(file.FullName),
+                            DirectoryStructure = Filesystem.MakeRelativePath(WorkingDirectory.FullName, file.Directory.FullName)
                         });
                     });
 
@@ -226,9 +229,9 @@ namespace Conductor_Client.Client
 
                 if (result != null)
                 {
-                    if(result.WorkType == WorkType.Training)
+                    if(result.WorkType == WorkPackageType.Training)
                         NotifyLogMessageEvent($"[Log] Training Work package received from server: {result.Version.ToString()} {result.GUID}");
-                    else if (result.WorkType == WorkType.Prediction)
+                    else if (result.WorkType == WorkPackageType.Prediction)
                         NotifyLogMessageEvent($"[Log] Prediction Work package received from server:{result.Version.ToString()} {result.GUID}");
                     else
                         NotifyLogMessageEvent($"[Log] Unknown Work package received from server: {result.Version.ToString()} {result.GUID}");

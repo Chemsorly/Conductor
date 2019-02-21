@@ -1,4 +1,4 @@
-﻿using MoreLinq;
+using MoreLinq;
 using Conductor_Server.Commands;
 using Conductor_Server.Configuration;
 using Conductor_Server.Utility;
@@ -166,7 +166,7 @@ namespace Conductor_Server.Assets
             StatusChangedEvent?.Invoke(configurationManager.CurrentConfiguration);
         }
 
-        Status UpdateStatus(Version pVersion, Status pOldStatus = null)
+        VersionStatus UpdateStatus(Version pVersion, VersionStatus pOldStatus = null)
         {
             //get version models folder
             var dir = fsManager.GetVersionModelsDirectory(pVersion);
@@ -175,10 +175,10 @@ namespace Conductor_Server.Assets
             List<FileInfo> modelFiles = new List<FileInfo>(), logFiles = new List<FileInfo>(), resultFiles = new List<FileInfo>();
             Dictionary<FileInfo, FileInfo> metaMapping = new Dictionary<FileInfo, FileInfo>();
 
-            foreach (var modelDir in dir.GetDirectories().Where(t => t.GetFiles().Any(u => u.Extension == ".h5")))
+            foreach (var modelDir in dir.GetDirectories())
             {
                 //get all dirs where there's at least one h5 model file
-                var files = modelDir.GetFiles();
+                var files = modelDir.GetFiles("*", SearchOption.AllDirectories);
                 var modelFile = files.FirstOrDefault(t => t.Name.Contains(".h5"));
                 var metaFile = files.FirstOrDefault(t => t.Name == "meta.xml");
                 var logFile = files.FirstOrDefault(t => t.Name == "console.log");
@@ -213,7 +213,7 @@ namespace Conductor_Server.Assets
             }
        
             //create status object
-            Status status = new Status();
+            VersionStatus status = new VersionStatus();
             Parallel.ForEach(metaMapping, model =>
             {
                 //get metadata
@@ -229,7 +229,7 @@ namespace Conductor_Server.Assets
                 var modelFileName = model.Key.Directory.Name;
                 var oldStatusModel = pOldStatus != null ? pOldStatus.CurrentModels.FirstOrDefault(t => t.ModelFileName == modelFileName) : null;
 
-                var predictionModel = new PredictionModel()
+                var predictionModel = new VersionStatusModel()
                 {
                     CreatedAt = metaData.Timestamp,
                     TrainingTime = metaData.Duration,

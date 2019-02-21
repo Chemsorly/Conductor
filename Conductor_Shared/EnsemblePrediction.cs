@@ -6,12 +6,12 @@ using System.Text;
 
 namespace Conductor_Shared
 {
-    public class RNN_EnsemblePrediction
+    public class EnsemblePrediction
     {
 
-        public RNN_EnsemblePrediction()
+        public EnsemblePrediction()
         {
-            SinglePredictions = new List<RNN_SinglePrediction>();
+            SinglePredictions = new List<SinglePrediction>();
             WorkPackageIDs = new List<Guid>();
         }
 
@@ -23,12 +23,12 @@ namespace Conductor_Shared
         /// <summary>
         /// returns the average prediction value
         /// </summary>
-        public double AveragePrediction => SinglePredictions.Average(t => t.PredictedBuffer);
+        public double AveragePrediction => SinglePredictions.Average(t => t.PredictedValue);
 
-        public double MedianPrediction => SinglePredictions.Median(t => t.PredictedBuffer);
+        public double MedianPrediction => SinglePredictions.Median(t => t.PredictedValue);
 
         public int TargetPredictions { get; set; }
-        public List<RNN_SinglePrediction> SinglePredictions { get; set; }
+        public List<SinglePrediction> SinglePredictions { get; set; }
         public List<Guid> WorkPackageIDs { get; set; }
     }
 }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Conductor_Shared
+namespace Conductor_Shared.Enums
 {
-    public enum WorkType
+    public enum WorkPackageType
     { 
         Training, Prediction
     }

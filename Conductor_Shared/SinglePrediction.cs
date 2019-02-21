@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Conductor_Shared
 {
-    public class RNN_SinglePrediction
+    public class SinglePrediction
     {
-        public double PredictedBuffer { get; set; }
+        public double PredictedValue { get; set; }
     }
 }

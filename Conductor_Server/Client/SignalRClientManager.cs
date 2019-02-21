@@ -66,7 +66,7 @@ namespace Conductor_Server.Client
             }
         }
 
-        public async void SendResults(RNN_EnsemblePrediction pResults)
+        public async void SendResults(EnsemblePrediction pResults)
         {
             try
             {

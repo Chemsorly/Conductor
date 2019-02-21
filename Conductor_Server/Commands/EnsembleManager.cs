@@ -10,17 +10,17 @@ namespace Conductor_Server.Commands
 {
     public class EnsembleManager : ManagerBase
     {
-        public AsyncObservableCollection<RNN_EnsemblePrediction> EnsemblePredictions { get; set; }
+        public AsyncObservableCollection<EnsemblePrediction> EnsemblePredictions { get; set; }
 
         public EnsembleManager()
         {
-            EnsemblePredictions = new AsyncObservableCollection<RNN_EnsemblePrediction>();
+            EnsemblePredictions = new AsyncObservableCollection<EnsemblePrediction>();
         }
 
-        public RNN_EnsemblePrediction CreateNewPrediction(PredictionRequestPackage pPredictionRequest)
+        public EnsemblePrediction CreateNewPrediction(PredictionRequestPackage pPredictionRequest)
         {
             NotifyNewLogMessageEvent("Create new prediction");
-            var pred = new RNN_EnsemblePrediction()
+            var pred = new EnsemblePrediction()
             {
                 RequestPackage = pPredictionRequest
             };
@@ -29,7 +29,7 @@ namespace Conductor_Server.Commands
             return pred;
         }
 
-        public RNN_EnsemblePrediction SubmitPrediction(PredictionResultPackage pPrediction)
+        public EnsemblePrediction SubmitPrediction(PredictionResultPackage pPrediction)
         {
             var target = EnsemblePredictions.FirstOrDefault(t => t.WorkPackageIDs.Any(u => u == pPrediction.InWorkPackage.GUID));
             if(target != null)

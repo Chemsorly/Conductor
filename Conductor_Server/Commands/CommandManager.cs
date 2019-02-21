@@ -16,7 +16,7 @@ namespace Conductor_Server.Commands
     {
         const int maxQueuesize = 400;
 
-        public delegate void PredictionFinished(RNN_EnsemblePrediction pEnsembleprediction);
+        public delegate void PredictionFinished(EnsemblePrediction pEnsembleprediction);
         public event PredictionFinished PredictionFinishedEvent;
         public event VersionManager.StatusChanged StatusChangedEvent;
 
@@ -76,15 +76,15 @@ namespace Conductor_Server.Commands
         {
             //check if there are any models in training or already queued, if yes substract from the amount
             var amount = pNumber - 
-                ActiveWorkItems.Count(t => t.Version.ToString() == pVersion.ToString() && t.WorkType == WorkType.Training) -
-                QueuedWorkItems.Count(t => t.Version.ToString() == pVersion.ToString() && t.WorkType == WorkType.Training); //compare by string since reference won't work
+                ActiveWorkItems.Count(t => t.Version.ToString() == pVersion.ToString() && t.WorkType == WorkPackageType.Training) -
+                QueuedWorkItems.Count(t => t.Version.ToString() == pVersion.ToString() && t.WorkType == WorkPackageType.Training); //compare by string since reference won't work
             if (amount > 0)
             {
                 //fetch files
                 var files = _versionManager.GetFilesForVersion(pVersion);
                 for (int i = 0; i < amount; i++)
                 {
-                    AddNewWorkItem(pVersion, files, WorkType.Training, Guid.NewGuid());
+                    AddNewWorkItem(pVersion, files, WorkPackageType.Training, Guid.NewGuid());
                 }
                 NotifyNewLogMessageEvent($"Requested {amount} more models for training.");
             }
@@ -129,7 +129,7 @@ namespace Conductor_Server.Commands
                         FileData = System.IO.File.ReadAllBytes(System.IO.Path.Combine(path, tempguid.ToString()))
                     });
 
-                    var guid = AddNewWorkItem(CurrentVersion, sendFiles, WorkType.Prediction, Guid.NewGuid());
+                    var guid = AddNewWorkItem(CurrentVersion, sendFiles, WorkPackageType.Prediction, Guid.NewGuid());
                     pred.WorkPackageIDs.Add(guid);
                 }
                 //cleanup
@@ -154,7 +154,7 @@ namespace Conductor_Server.Commands
                 //check if priority conditions are met: the top n clients in client list are never assigned to training where n is the priority clients count                
                 if (clientIndex != -1 && priorityClients > clientIndex)
                 {
-                    workPackage = QueuedWorkItems.FirstOrDefault(t => t.WorkType == WorkType.Prediction);
+                    workPackage = QueuedWorkItems.FirstOrDefault(t => t.WorkType == WorkPackageType.Prediction);
                     if (workPackage == null)
                     {
                         NotifyNewLogMessageEvent($"Priority request received from {pAssignedClient}, but no prediction workpackage was found.");
@@ -231,7 +231,7 @@ namespace Conductor_Server.Commands
                 //!= null equals finished
                 PredictionFinishedEvent?.Invoke(ensemble);
             }
-            NotifyNewLogMessageEvent($"Received Prediction result for {pResults.InWorkPackage.GUID}: {nameof(pResults.Prediction.PredictedBuffer)}={pResults.Prediction.PredictedBuffer}.");
+            NotifyNewLogMessageEvent($"Received Prediction result for {pResults.InWorkPackage.GUID}: {nameof(pResults.Prediction.PredictedValue)}={pResults.Prediction.PredictedValue}.");
         }
 
         public void ReceiveErrorFromWorker(List<String> pErrorLog, WorkPackage pWorkPackage)
@@ -246,7 +246,7 @@ namespace Conductor_Server.Commands
         public void UpdateConfiguration(ConductorConfiguration pConfiguration) { this._versionManager.UpdateConfiguration(pConfiguration); }
         public void ReportConfiguration() { this._versionManager.ReportVersions(); }
 
-        private Guid AddNewWorkItem(Conductor_Shared.Version pVersion, List<File> pFiles, WorkType pWorkType, Guid pGuid)
+        private Guid AddNewWorkItem(Conductor_Shared.Version pVersion, List<File> pFiles, WorkPackageType pWorkType, Guid pGuid)
         {
             var newitem = new WorkItem(pVersion, pFiles, pWorkType, pGuid);
             newitem.OnTimeoutHappenedEvent += HandleTimeout;

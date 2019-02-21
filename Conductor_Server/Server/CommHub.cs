@@ -66,7 +66,7 @@ namespace Conductor_Server.Server
         public void SendPredictionResults(PredictionResultPackage pResults)
         {
             //debug
-            NewLogMessageEvent?.Invoke($"Prediction results received from {this.Context?.ConnectionId} with value {pResults.Prediction.PredictedBuffer}");
+            NewLogMessageEvent?.Invoke($"Prediction results received from {this.Context?.ConnectionId} with value {pResults.Prediction.PredictedValue}");
             PredictionResultsReceivedEvent?.Invoke(pResults, this.Context?.ConnectionId);
         }
 
