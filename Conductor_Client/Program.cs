@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Conductor_Client.Client;
+using Microsoft.Extensions.Hosting;
 
 namespace Conductor_Client
 {
@@ -48,8 +49,6 @@ namespace Conductor_Client
             Console.WriteLine($"Processing Unit: {machinedata.ProcessingUnit}");
             Console.WriteLine($"Name: {machinedata.Name}");
 
-
-
             //start
             Console.WriteLine($"Target host: {targetHost}");
             Task.Factory.StartNew(() =>
@@ -58,7 +57,9 @@ namespace Conductor_Client
                 _client.LogEvent += _client_LogEvent;
                 _client.Initialize($"http://{CleanHoststring(targetHost)}/signalr");
             });
-            Console.ReadKey();
+
+            var hostBuilder = new HostBuilder();
+            hostBuilder.RunConsoleAsync().Wait();
         }
 
         private static void _client_LogEvent(string message)
