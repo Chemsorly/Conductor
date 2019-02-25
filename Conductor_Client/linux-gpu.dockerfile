@@ -14,6 +14,7 @@ ENV CONDUCTOR_VERSION ${CONDUCTOR_VERSION}
 ENV CONDUCTOR_OS ubuntu
 ENV CONDUCTOR_TYPE gpu
 ENV CONDUCTOR_HOST ""
+ENV PYTHONDONTWRITEBYTECODE 1
 
 # Install .NET Core
 RUN apt-get update && apt-get -y upgrade && apt-get -y install apt-transport-https
