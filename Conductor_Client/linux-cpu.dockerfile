@@ -14,6 +14,7 @@ ENV CONDUCTOR_VERSION ${CONDUCTOR_VERSION}
 ENV CONDUCTOR_OS ubuntu
 ENV CONDUCTOR_TYPE cpu
 ENV CONDUCTOR_HOST ""
+ENV PYTHONDONTWRITEBYTECODE 1
 
 # Install .NET Core
 RUN apt-get update && apt-get -y upgrade && apt-get -y install apt-transport-https
@@ -22,7 +23,7 @@ RUN dpkg -i packages-microsoft-prod.deb
 RUN apt-get update && apt-get -y install dotnet-runtime-2.2
 
 # install other dependencies
-RUN pip3 install hyperas
+RUN pip3 install hyperas requests
 
 # run app
 COPY --from=builder 'root/build/Conductor_Client/bin/Debug/netcoreapp2.2/publish/' '/root/app'
