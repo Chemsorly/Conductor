@@ -23,7 +23,7 @@ RUN dpkg -i packages-microsoft-prod.deb
 RUN apt-get update && apt-get -y install dotnet-runtime-2.2
 
 # install other dependencies
-RUN pip3 install hyperas
+RUN pip3 install hyperas requests
 
 # run app
 COPY --from=builder 'root/build/Conductor_Client/bin/Debug/netcoreapp2.2/publish/' '/root/app'
