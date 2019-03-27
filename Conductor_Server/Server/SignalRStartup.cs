@@ -47,9 +47,9 @@ namespace Conductor_Server.Server
             {
                 routes.MapHub<CommHub>("/signalr", options =>
                 {
-                    //100 * 1024 * 1024 * 1024 = 100mb buffer size
+                    //1024 * 1024 * 1024 * 1024 = 1GB buffer size
                     //workaround for https://github.com/aspnet/SignalR/issues/2266
-                    options.ApplicationMaxBufferSize = 107374182400;
+                    options.ApplicationMaxBufferSize = 1099511627776;
                 });
             });
 
