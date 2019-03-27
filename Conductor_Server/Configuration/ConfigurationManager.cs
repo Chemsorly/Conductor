@@ -127,7 +127,7 @@ namespace Conductor_Server.Configuration
         {
             var config = new ConductorConfiguration()
             {
-                ReserveNodes = 0.2d
+                ReserveNodes = 0
                 //remaining data gets fetched from current structure
             };
 

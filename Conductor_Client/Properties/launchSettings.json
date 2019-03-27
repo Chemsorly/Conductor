@@ -10,7 +10,7 @@
   "profiles": {
     "Conductor_Client": {
       "commandName": "Project",
-      "commandLineArgs": "example.org:8080",
+      "commandLineArgs": "localhost:8080",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
